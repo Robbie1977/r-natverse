@@ -8,3 +8,4 @@ RUN apt-get update \
        libglu1-mesa-dev 
        
 RUN install2.r natmanager
+RUN r -e "natmanager::install('core')" 
