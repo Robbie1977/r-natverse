@@ -103,7 +103,18 @@ docker run -ti -v "$HOME":/home/rstudio \
   natverse/r-natverse R
 ```
 
-## Limitations
+## Pros and Cons
+
+### Advantages
+
+* Pre-built Docker image saves installation time - one step install for R, 
+  Rsudio and all natverse packages and their dependencies.
+* Avoid installation issues dues to stable container environment
+* Reproducible Research - provides a snapshot of a complete analysis environment.
+  You can use this as a starting point for your own projects and share the full
+  environment with your colleagues.
+
+### Limitations
 
 The main limitations of using the containerised natverse distribution
 
@@ -112,6 +123,12 @@ The main limitations of using the containerised natverse distribution
   has some limitations. See [here](http://natverse.org/nat/articles/plotly.html) 
   for details.
 * speed: performance of Docker containers is surprisingly good in my 
-  experience (some even benchmarks can even be better than the host system).
+  experience (some benchmarks can even be better than the host system).
   However there may be limitations in how much memory can be addressed or the
   number of cores available for parallel processing.
+* Docker may not run on some older systems
+
+## Acknowledgements
+
+Big thanks to the [rocker](https://www.rocker-project.org/) and 
+[natverse](http://natverse.org/author/) teams!
