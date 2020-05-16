@@ -7,4 +7,4 @@ RUN apt-get update \
     && apt-get install -y \
        libglu1-mesa-dev 
        
-RUN install.r natmanager
+RUN install2.r natmanager
