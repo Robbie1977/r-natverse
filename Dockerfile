@@ -6,7 +6,8 @@ MAINTAINER "Gregory Jefferis" jefferis@gmail.com
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   cmake \
   git \
-  libglu1-mesa-dev
+  libglu1-mesa-dev \
+  libhdf5-dev
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
