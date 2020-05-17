@@ -9,6 +9,11 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libglu1-mesa-dev \
   libhdf5-dev
 
+# Java for rJava
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+  && R CMD javareconf \
+  install2.r rJava
+
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
   && cd cmtk/core && mkdir build && cd build \
