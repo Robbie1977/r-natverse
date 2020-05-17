@@ -9,11 +9,6 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libglu1-mesa-dev \
   libhdf5-dev
 
-# Java for rJava
-RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  && R CMD javareconf \
-  install2.r rJava
-
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
   && cd cmtk/core && mkdir build && cd build \
@@ -21,6 +16,14 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
   && make all install \
   && cd / \
   && rm -rf /tmp/src 
+
+# Java for rJava
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+  default-jdk \
+  libbz2-dev \
+  liblzma-dev \
+  && R CMD javareconf \
+  install2.r rJava
 
 # try because otherwise the stop inside selfupdate can stop the build here
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
