@@ -17,7 +17,8 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
   && cd / \
   && rm -rf /tmp/src 
 
-RUN install2.r natmanager && r -e "natmanager::selfupdate()"
+# try because otherwise the stop inside selfupdate can stop the build here
+RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
 RUN r -e "natmanager::install('core')"
 
