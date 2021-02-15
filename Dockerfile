@@ -25,6 +25,10 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   && R CMD javareconf \
   install2.r rJava
 
+RUN r -e 'if (!require("devtools")) install.packages("devtools")' \
+&& r -e 'devtools::install_github("natverse/elmr")' \
+&& r -e 'devtools::install_github("natverse/neuprintr")' 
+
 # try because otherwise the stop inside selfupdate can stop the build here
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
