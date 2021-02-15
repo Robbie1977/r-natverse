@@ -36,3 +36,5 @@ RUN r -e "natmanager::install('natverse')" \
 
 RUN apt-get autoclean -y \
   && rm -rf /var/lib/apt/lists/*
+  
+RUN ln -s /usr/bin/python3 /usr/bin/python
