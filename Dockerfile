@@ -27,6 +27,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   && R CMD javareconf \
   install2.r rJava
 
+RUN r -e 'install.packages("igraph")'
+
 RUN r -e 'if (!require("devtools")) install.packages("devtools")' \
 && r -e 'devtools::install_github("natverse/elmr")' \
 && r -e 'devtools::install_github("natverse/neuprintr")' 
