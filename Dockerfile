@@ -23,6 +23,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libbz2-dev \
   liblzma-dev \
   gcc-7 g++-7 gfortran-7 \
+  build-essential \
   && R CMD javareconf \
   install2.r rJava
 
