@@ -29,6 +29,9 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 
 RUN r -e 'install.packages("igraph")'
 
+RUN ls -l /usr/local/lib/R/site-library/igraph/ \
+&& ls -l /usr/local/lib/R/site-library/igraph/libs/
+
 RUN r -e 'if (!require("devtools")) install.packages("devtools")' \
 && r -e 'devtools::install_github("natverse/elmr")' \
 && r -e 'devtools::install_github("natverse/neuprintr")' 
