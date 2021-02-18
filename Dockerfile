@@ -19,12 +19,7 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
 
 # Java for rJava
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  libbz2-dev \
-  liblzma-dev \
-  build-essential \
-  libglpk40 \
-  && R CMD javareconf \
-  install2.r rJava
+  libcurl4-openssl-dev libssl-dev
 
 # try because otherwise the stop inside selfupdate can stop the build here
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
