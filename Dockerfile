@@ -28,8 +28,8 @@ RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 RUN r -e "natmanager::install('core')"
 
 # NB we use the natverse GITHUB PAT for the update process also
-RUN r -e "natmanager::install('natverse')" \
-  && r -e "natverse::natverse_update(update = TRUE, upgrade = 'always', auth_token=natmanager::check_pat(create = F))"
+RUN r -e "natmanager::install('natverse')" || true
+RUN r -e "natverse::natverse_update(update = TRUE, upgrade = 'always', auth_token=natmanager::check_pat(create = F))" || true
 
 RUN apt-get autoclean -y \
   && rm -rf /var/lib/apt/lists/*
