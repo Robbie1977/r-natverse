@@ -2,8 +2,6 @@ FROM rocker/tidyverse
 
 MAINTAINER "Gregory Jefferis" jefferis@gmail.com
 
-ENV DEFAULT_KERNEL_NAME="R"
-
 ## System libraries
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   cmake \
@@ -43,3 +41,7 @@ RUN apt-get autoclean -y \
   && rm -rf /var/lib/apt/lists/*
   
 RUN ln -s /usr/bin/python3 /usr/bin/python
+
+ENV R_LIBS_USER "~/work/.R/library"
+# Set default kernel to R
+ENV DEFAULT_KERNEL_NAME "ir"
