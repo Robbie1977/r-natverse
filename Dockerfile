@@ -19,7 +19,6 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
 
 # Java for rJava
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  default-jdk \
   libbz2-dev \
   liblzma-dev \
   build-essential \
