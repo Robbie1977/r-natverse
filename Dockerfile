@@ -1,4 +1,4 @@
-FROM rocker/tidyverse
+FROM deepnote/ir:4.0.3
 
 MAINTAINER "Gregory Jefferis" jefferis@gmail.com
 
@@ -41,7 +41,3 @@ RUN apt-get autoclean -y \
   && rm -rf /var/lib/apt/lists/*
   
 RUN ln -s /usr/bin/python3 /usr/bin/python
-
-ENV R_LIBS_USER "~/work/.R/library"
-# Set default kernel to R
-ENV DEFAULT_KERNEL_NAME "ir"
