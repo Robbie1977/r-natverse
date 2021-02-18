@@ -25,7 +25,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
-RUN r -e "natmanager::install('core')"
+RUN r -e "natmanager::install('core')" || true
 
 # NB we use the natverse GITHUB PAT for the update process also
 RUN r -e "natmanager::install('natverse')" || true
