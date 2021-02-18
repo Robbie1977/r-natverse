@@ -19,7 +19,7 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
 
 # Java for rJava
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  libcurl4-openssl-dev libssl-dev
+  libcurl4-openssl-dev libssl-dev pkg-config
 
 # try because otherwise the stop inside selfupdate can stop the build here
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
