@@ -2,6 +2,8 @@ FROM rocker/tidyverse
 
 MAINTAINER "Gregory Jefferis" jefferis@gmail.com
 
+ENV DEFAULT_KERNEL_NAME="R"
+
 ## System libraries
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   cmake \
