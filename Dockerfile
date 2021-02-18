@@ -22,6 +22,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   pkg-config libcurl4-openssl-dev libssl-dev
 
 # try because otherwise the stop inside selfupdate can stop the build here
+RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
 RUN r -e "natmanager::install('core')"
