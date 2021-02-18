@@ -25,6 +25,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
+RUN R -e "install.packages('plotly', lib='/usr/local/lib/R/site-library')"
+
 RUN r -e "natmanager::install('core')" || true
 
 # NB we use the natverse GITHUB PAT for the update process also
