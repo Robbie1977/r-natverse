@@ -17,9 +17,18 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
   && cd / \
   && rm -rf /tmp/src 
 
-# Java for rJava
+
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   pkg-config libcurl4-openssl-dev libssl-dev libxml2-dev
+
+# Dependencies needed for R libraries
+RUN apt-get update  -qq \
+   && apt-get install -y --no-install-recommends libcairo2-dev libxt-dev \
+   libpq-dev \
+   libudunits2-dev libgdal-dev libgeos-dev libproj-dev
+
+# Install the R libraries
+RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly'), lib='/usr/local/lib/R/site-library', dependencies = T)"
 
 # try because otherwise the stop inside selfupdate can stop the build here
 RUN install2.r natmanager || true
