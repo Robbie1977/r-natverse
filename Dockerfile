@@ -2,15 +2,16 @@ FROM rocker/tidyverse:latest
 
 LABEL maintainer="Robert Court <rcourt@ed.ac.uk>"
 
-# Install IRkernel for Jupyter notebook support
-RUN R -e "install.packages('IRkernel'); IRkernel::installspec()"
-
-## System libraries
+## System libraries - install ZeroMQ first for IRkernel
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   cmake \
   git \
   libglu1-mesa-dev \
-  libhdf5-dev
+  libhdf5-dev \
+  libzmq3-dev
+
+# Install IRkernel for Jupyter notebook support
+RUN R -e "install.packages('IRkernel'); IRkernel::installspec()"
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
