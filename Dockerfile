@@ -1,4 +1,4 @@
-FROM deepnote/ir:4.0.3
+FROM deepnote/ir
 
 MAINTAINER "Gregory Jefferis" jefferis@gmail.com
 
