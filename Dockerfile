@@ -2,10 +2,15 @@ FROM rocker/tidyverse:latest
 
 LABEL maintainer="Robert Court <rcourt@ed.ac.uk>"
 
-## System libraries - install comprehensive Java and HDF5 support
+## System libraries - install comprehensive Java, HDF5, and development support
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   cmake \
   git \
+  curl \
+  wget \
+  build-essential \
+  pkg-config \
+  patch \
   libglu1-mesa-dev \
   libhdf5-dev \
   libhdf5-serial-dev \
@@ -13,10 +18,20 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   hdf5-helpers \
   hdf5-tools \
   libzmq3-dev \
+  libcurl4-openssl-dev \
+  libssl-dev \
+  libxml2-dev \
+  libcairo2-dev \
+  libxt-dev \
+  libpq-dev \
+  libudunits2-dev \
+  libgdal-dev \
+  libgeos-dev \
+  libproj-dev \
+  libglpk-dev \
   openjdk-11-jdk \
   openjdk-11-jre \
-  ca-certificates-java \
-  patch
+  ca-certificates-java
 
 # Configure Java environment and reconfigure R for Java
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
@@ -45,7 +60,9 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   pkg-config libcurl4-openssl-dev libssl-dev libxml2-dev \
-  build-essential
+  build-essential \
+  curl \
+  wget
 
 # Dependencies needed for R libraries
 RUN apt-get update  -qq \
