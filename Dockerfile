@@ -9,7 +9,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libglu1-mesa-dev \
   libhdf5-dev \
   libhdf5-serial-dev \
-  libhdf5-cpp-103 \
+  libhdf5-hl-cpp-100t64 \
   libzmq3-dev
 
 # Install IRkernel for potential Jupyter notebook support
