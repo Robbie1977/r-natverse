@@ -10,8 +10,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libhdf5-dev \
   libhdf5-serial-dev \
   libhdf5-hl-cpp-100t64 \
-  libhdf5-tools \
   hdf5-helpers \
+  hdf5-tools \
   libzmq3-dev \
   openjdk-11-jdk \
   openjdk-11-jre \
