@@ -30,6 +30,9 @@ RUN R -e "install.packages('IRkernel')"
 # Set environment variables for HDF5
 ENV HDF5_USE_FILE_LOCKING=FALSE
 
+# Clean up any existing R package installations that might be corrupted
+RUN rm -rf /usr/local/lib/R/site-library/00LOCK* || true
+
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
   && cd cmtk/core && mkdir build && cd build \
