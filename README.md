@@ -14,11 +14,11 @@ graphical interface. This is the quickest way to get started with the natverse.
 1. Install [Docker](https://docs.docker.com/get-docker/)
 2. In the terminal 
 ```
-docker pull natverse/r-natverse
+docker pull rcourt/r-natverse
 docker run -p 127.0.0.1:8787:8787 \
   -e DISABLE_AUTH=true \
 	-v "$HOME":/home/rstudio \
-	natverse/r-natverse
+	rcourt/r-natverse
 ```
 3. Open http://127.0.0.1:8787 in your browser!
 4. Find out how to use the **natverse** at http://natverse.org/learn
@@ -42,6 +42,10 @@ a *container* on your local machine. The container allows you to run software
 which has been installed in a standardised way. Containers typically provide multiple
 pieces of software. **r-natverse** provides both R and the RStudio GUI.
 
+## R Version
+
+This image is built on `deepnote/ir:4.4.3-ra-54-buildcache` which provides R version 4.4.3, ensuring you have access to the latest stable features and improvements in R.
+
 ## Getting the r-natverse docker image
 
 You must first have [docker installed](https://docs.docker.com/get-docker/) on your machine.
@@ -51,7 +55,7 @@ You must first have [docker installed](https://docs.docker.com/get-docker/) on y
 You can get the pre-built image straight from Docker:
 
 ```
-docker pull natverse/r-natverse
+docker pull rcourt/r-natverse
 ```
 
 ### Building
@@ -81,7 +85,7 @@ do this by replacing `<MYPASSWORD>` in the following command.
 ```
 docker run -e PASSWORD="<MYPASSWORD>" -p 8787:8787 \
 	-v "$HOME":/home/rstudio \
-	natverse/r-natverse
+	rcourt/r-natverse
 ```
 
 You could also set a password via an environment variable. See 
@@ -100,7 +104,7 @@ You can run the command line version of base R like so:
 
 ```
 docker run -ti -v "$HOME":/home/rstudio \
-  natverse/r-natverse R
+  rcourt/r-natverse R
 ```
 
 ## Pros and Cons

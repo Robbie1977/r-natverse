@@ -1,4 +1,4 @@
-tag=natverse/r-natverse
+tag=rcourt/r-natverse
 password="natverse"
 
 build:
@@ -12,8 +12,8 @@ r:
 
 rstudio:
 	docker run -e PASSWORD=$(password) -p 8787:8787 \
-	-v $(HOME):/home/$(natuser) \
-	natverse/r-natverse
+	-v $(HOME):/home/rstudio \
+	$(tag)
 
 push:
 	docker push $(tag)

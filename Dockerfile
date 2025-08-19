@@ -1,4 +1,4 @@
-FROM deepnote/ir
+FROM deepnote/ir:4.4.3-ra-54-buildcache
 
 MAINTAINER "Gregory Jefferis" jefferis@gmail.com
 
