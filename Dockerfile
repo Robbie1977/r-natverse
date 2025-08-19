@@ -30,7 +30,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
 RUN apt-get update  -qq \
    && apt-get install -y --no-install-recommends libcairo2-dev libxt-dev \
    libpq-dev \
-   libudunits2-dev libgdal-dev libgeos-dev libproj-dev
+   libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
+   libglpk-dev
 
 # Install the R libraries
 RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly'), lib='/usr/local/lib/R/site-library', dependencies = T)"
