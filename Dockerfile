@@ -55,21 +55,7 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
            -DCMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations -std=c++14" .. \
   && make all install \
   && cd / \
-  && rm -rf /tmp/src 
-
-
-RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  pkg-config libcurl4-openssl-dev libssl-dev libxml2-dev \
-  build-essential \
-  curl \
-  wget
-
-# Dependencies needed for R libraries
-RUN apt-get update  -qq \
-   && apt-get install -y --no-install-recommends libcairo2-dev libxt-dev \
-   libpq-dev \
-   libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
-   libglpk-dev
+  && rm -rf /tmp/src
 
 # Install the R libraries with improved dependency handling and explicit curl fix
 RUN R -e "remove.packages('curl', lib='/usr/local/lib/R/site-library')" || true
