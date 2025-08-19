@@ -15,7 +15,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libzmq3-dev \
   openjdk-11-jdk \
   openjdk-11-jre \
-  ca-certificates-java
+  ca-certificates-java \
+  patch
 
 # Configure Java environment and reconfigure R for Java
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
