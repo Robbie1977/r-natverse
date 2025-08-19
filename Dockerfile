@@ -10,8 +10,8 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libhdf5-dev \
   libzmq3-dev
 
-# Install IRkernel for Jupyter notebook support
-RUN R -e "install.packages('IRkernel'); IRkernel::installspec()"
+# Install IRkernel for potential Jupyter notebook support
+RUN R -e "install.packages('IRkernel')"
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
