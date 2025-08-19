@@ -8,10 +8,15 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   git \
   libglu1-mesa-dev \
   libhdf5-dev \
+  libhdf5-serial-dev \
+  libhdf5-cpp-103 \
   libzmq3-dev
 
 # Install IRkernel for potential Jupyter notebook support
 RUN R -e "install.packages('IRkernel')"
+
+# Set environment variables for HDF5
+ENV HDF5_USE_FILE_LOCKING=FALSE
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
