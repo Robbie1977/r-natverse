@@ -41,7 +41,8 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
 
 
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  pkg-config libcurl4-openssl-dev libssl-dev libxml2-dev
+  pkg-config libcurl4-openssl-dev libssl-dev libxml2-dev \
+  build-essential
 
 # Dependencies needed for R libraries
 RUN apt-get update  -qq \
@@ -50,7 +51,9 @@ RUN apt-get update  -qq \
    libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
    libglpk-dev
 
-# Install the R libraries with improved dependency handling
+# Install the R libraries with improved dependency handling and explicit curl fix
+RUN R -e "remove.packages('curl', lib='/usr/local/lib/R/site-library')" || true
+RUN R -e "install.packages('curl', lib='/usr/local/lib/R/site-library', dependencies = T, type='source')"
 RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly'), lib='/usr/local/lib/R/site-library', dependencies = T)"
 
 # Install rJava first with proper Java configuration
@@ -66,9 +69,9 @@ RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 # Install natverse packages with fallback approaches and rate limit handling
 RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/nat')"
 
-# Try to install key packages individually to avoid rate limits
-RUN R -e "remotes::install_github('natverse/nat.h5reg')" || echo "nat.h5reg install failed"
-RUN R -e "remotes::install_github('natverse/nat.jrcbrains')" || echo "nat.jrcbrains install failed"
+# Try to install key packages individually to avoid rate limits with better error handling
+RUN R -e "print('Installing nat.h5reg...'); if(!require('curl', quietly=TRUE)) stop('curl not available'); remotes::install_github('natverse/nat.h5reg')" || echo "nat.h5reg install failed - check curl and hdf5r dependencies"
+RUN R -e "print('Installing nat.jrcbrains...'); if(!require('nat.h5reg', quietly=TRUE)) stop('nat.h5reg not available'); remotes::install_github('natverse/nat.jrcbrains')" || echo "nat.jrcbrains install failed - check nat.h5reg dependency"
 
 # Only try full natverse if essential packages succeeded
 RUN R -e "if(require('nat.h5reg', quietly=TRUE)) natmanager::install('natverse')" || echo "Full natverse install skipped due to dependencies"
