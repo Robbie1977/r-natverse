@@ -10,13 +10,19 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libhdf5-dev \
   libhdf5-serial-dev \
   libhdf5-hl-cpp-100t64 \
-  libzmq3-dev
+  libzmq3-dev \
+  default-jdk \
+  r-cran-rjava
+
+# Configure Java for R
+RUN R CMD javareconf
 
 # Install IRkernel for potential Jupyter notebook support
 RUN R -e "install.packages('IRkernel')"
 
-# Set environment variables for HDF5
+# Set environment variables for HDF5 and Java
 ENV HDF5_USE_FILE_LOCKING=FALSE
+ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
@@ -38,19 +44,21 @@ RUN apt-get update  -qq \
    libudunits2-dev libgdal-dev libgeos-dev libproj-dev \
    libglpk-dev
 
-# Install the R libraries
-RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly'), lib='/usr/local/lib/R/site-library', dependencies = T)"
+# Install the R libraries with improved dependency handling
+RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly', 'rJava'), lib='/usr/local/lib/R/site-library', dependencies = T)"
 
-# try because otherwise the stop inside selfupdate can stop the build here
+# Install hdf5r explicitly first to ensure proper HDF5 linking
+RUN R -e "install.packages('hdf5r', lib='/usr/local/lib/R/site-library', dependencies = T)"
+
+# Install core natverse packages using proper natmanager approach
 RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
-RUN R -e "install.packages('plotly', lib='/usr/local/lib/R/site-library')"
-
-RUN r -e "natmanager::install('core')" || true
+# Install natverse packages using the recommended approach
+RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/natverse')"
+RUN R -e "natmanager::install('natverse')" || true
 
 # NB we use the natverse GITHUB PAT for the update process also
-RUN r -e "natmanager::install('natverse')" || true
 RUN r -e "natverse::natverse_update(update = TRUE, upgrade = 'always', auth_token=natmanager::check_pat(create = F))" || true
 
 RUN apt-get autoclean -y \
