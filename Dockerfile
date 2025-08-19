@@ -1,6 +1,9 @@
-FROM deepnote/ir:4.4.3-ra-54-buildcache
+FROM rocker/tidyverse:4.4.1
 
-MAINTAINER "Gregory Jefferis" jefferis@gmail.com
+LABEL maintainer="Robert Court <rcourt@ed.ac.uk>"
+
+# Install IRkernel for Jupyter notebook support
+RUN R -e "install.packages('IRkernel'); IRkernel::installspec()"
 
 ## System libraries
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \

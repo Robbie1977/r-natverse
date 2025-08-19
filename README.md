@@ -44,7 +44,7 @@ pieces of software. **r-natverse** provides both R and the RStudio GUI.
 
 ## R Version
 
-This image is built on `deepnote/ir:4.4.3-ra-54-buildcache` which provides R version 4.4.3, ensuring you have access to the latest stable features and improvements in R.
+This image is built on `rocker/tidyverse:4.4.1` which provides R version 4.4.1 with the tidyverse packages pre-installed, ensuring you have access to the latest stable features and improvements in R along with IRkernel support for Jupyter notebooks.
 
 ## Getting the r-natverse docker image
 
