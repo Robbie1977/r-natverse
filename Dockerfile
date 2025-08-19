@@ -62,15 +62,21 @@ RUN R -e "install.packages('hdf5r', lib='/usr/local/lib/R/site-library', depende
 RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
-# Install natverse packages with fallback approaches
+# Install natverse packages with fallback approaches and rate limit handling
 RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/nat')"
-RUN R -e "natmanager::install('natverse')" || R -e "remotes::install_github('natverse/natverse')"
+
+# Try to install key packages individually to avoid rate limits
+RUN R -e "remotes::install_github('natverse/nat.h5reg')" || echo "nat.h5reg install failed"
+RUN R -e "remotes::install_github('natverse/nat.jrcbrains')" || echo "nat.jrcbrains install failed"
+
+# Only try full natverse if essential packages succeeded
+RUN R -e "if(require('nat.h5reg', quietly=TRUE)) natmanager::install('natverse')" || echo "Full natverse install skipped due to dependencies"
 
 # Diagnostic step to verify installation
 RUN R -e "library(nat.h5reg); dr_h5reg()" || echo "nat.h5reg diagnostic failed but continuing..."
 
-# NB we use the natverse GITHUB PAT for the update process also
-RUN r -e "natverse::natverse_update(update = TRUE, upgrade = 'always', auth_token=natmanager::check_pat(create = F))" || true
+# Only try update if we have a working natverse installation
+RUN R -e "if(require('natverse', quietly=TRUE)) natverse::natverse_update(update = FALSE)" || echo "natverse update skipped"
 
 RUN apt-get autoclean -y \
   && rm -rf /var/lib/apt/lists/*
