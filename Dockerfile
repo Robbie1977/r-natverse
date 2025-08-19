@@ -2,7 +2,7 @@ FROM rocker/tidyverse:latest
 
 LABEL maintainer="Robert Court <rcourt@ed.ac.uk>"
 
-## System libraries - install ZeroMQ first for IRkernel
+## System libraries - install comprehensive Java and HDF5 support
 RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   cmake \
   git \
@@ -10,19 +10,24 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
   libhdf5-dev \
   libhdf5-serial-dev \
   libhdf5-hl-cpp-100t64 \
+  libhdf5-tools \
+  hdf5-helpers \
   libzmq3-dev \
-  default-jdk \
-  r-cran-rjava
+  openjdk-11-jdk \
+  openjdk-11-jre \
+  ca-certificates-java
 
-# Configure Java for R
-RUN R CMD javareconf
+# Configure Java environment and reconfigure R for Java
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV PATH="$JAVA_HOME/bin:$PATH"
+RUN update-ca-certificates -f && \
+    R CMD javareconf
 
 # Install IRkernel for potential Jupyter notebook support
 RUN R -e "install.packages('IRkernel')"
 
-# Set environment variables for HDF5 and Java
+# Set environment variables for HDF5
 ENV HDF5_USE_FILE_LOCKING=FALSE
-ENV JAVA_HOME=/usr/lib/jvm/default-java
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
@@ -45,18 +50,24 @@ RUN apt-get update  -qq \
    libglpk-dev
 
 # Install the R libraries with improved dependency handling
-RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly', 'rJava'), lib='/usr/local/lib/R/site-library', dependencies = T)"
+RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly'), lib='/usr/local/lib/R/site-library', dependencies = T)"
 
-# Install hdf5r explicitly first to ensure proper HDF5 linking
-RUN R -e "install.packages('hdf5r', lib='/usr/local/lib/R/site-library', dependencies = T)"
+# Install rJava first with proper Java configuration
+RUN R -e "install.packages('rJava', lib='/usr/local/lib/R/site-library', dependencies = T)"
+
+# Install hdf5r explicitly with comprehensive HDF5 support
+RUN R -e "install.packages('hdf5r', lib='/usr/local/lib/R/site-library', dependencies = T, configure.args='--with-hdf5=/usr/lib/x86_64-linux-gnu/hdf5/serial')"
 
 # Install core natverse packages using proper natmanager approach
 RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
-# Install natverse packages using the recommended approach
-RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/natverse')"
-RUN R -e "natmanager::install('natverse')" || true
+# Install natverse packages with fallback approaches
+RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/nat')"
+RUN R -e "natmanager::install('natverse')" || R -e "remotes::install_github('natverse/natverse')"
+
+# Diagnostic step to verify installation
+RUN R -e "library(nat.h5reg); dr_h5reg()" || echo "nat.h5reg diagnostic failed but continuing..."
 
 # NB we use the natverse GITHUB PAT for the update process also
 RUN r -e "natverse::natverse_update(update = TRUE, upgrade = 'always', auth_token=natmanager::check_pat(create = F))" || true
