@@ -16,7 +16,8 @@ RUN R -e "install.packages('IRkernel')"
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
   && cd cmtk/core && mkdir build && cd build \
-  && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. \
+  && cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local \
+           -DCMAKE_CXX_FLAGS="-Wno-error=deprecated-declarations -std=c++14" .. \
   && make all install \
   && cd / \
   && rm -rf /tmp/src 
