@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:4.4.1
+FROM rocker/tidyverse:latest
 
 LABEL maintainer="Robert Court <rcourt@ed.ac.uk>"
 
