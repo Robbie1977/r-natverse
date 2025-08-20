@@ -47,6 +47,8 @@ ENV HDF5_USE_FILE_LOCKING=FALSE
 
 # Clean up any existing R package installations that might be corrupted
 RUN rm -rf /usr/local/lib/R/site-library/00LOCK* || true
+RUN rm -rf /usr/local/lib/R/site-library/nat || true
+RUN chmod -R 755 /usr/local/lib/R/site-library || true
 
 RUN mkdir -p /tmp/src && cd /tmp/src \
   && git clone --depth 5 https://github.com/jefferis/cmtk \
@@ -58,6 +60,7 @@ RUN mkdir -p /tmp/src && cd /tmp/src \
   && rm -rf /tmp/src
 
 # Install the R libraries with improved dependency handling and explicit curl fix
+RUN rm -rf /usr/local/lib/R/site-library/00LOCK* || true
 RUN R -e "remove.packages('curl', lib='/usr/local/lib/R/site-library')" || true
 RUN R -e "install.packages('curl', lib='/usr/local/lib/R/site-library', dependencies = T, type='source')"
 RUN R -e "install.packages(c('tidyverse', 'data.table', 'RSQLite', 'remotes', 'reticulate', 'igraph', 'plotly'), lib='/usr/local/lib/R/site-library', dependencies = T)"
@@ -69,10 +72,12 @@ RUN R -e "install.packages('rJava', lib='/usr/local/lib/R/site-library', depende
 RUN R -e "install.packages('hdf5r', lib='/usr/local/lib/R/site-library', dependencies = T, configure.args='--with-hdf5=/usr/lib/x86_64-linux-gnu/hdf5/serial')"
 
 # Install core natverse packages using proper natmanager approach
+RUN rm -rf /usr/local/lib/R/site-library/00LOCK* || true
 RUN install2.r natmanager || true
 RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
 # Install natverse packages with fallback approaches and rate limit handling
+RUN rm -rf /usr/local/lib/R/site-library/00LOCK* || true
 RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/nat')"
 
 # Try to install key packages individually to avoid rate limits with better error handling
