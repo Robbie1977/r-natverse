@@ -78,7 +78,7 @@ RUN install2.r natmanager && r -e "try(natmanager::selfupdate())"
 
 # Install natverse packages with fallback approaches and rate limit handling
 RUN rm -rf /usr/local/lib/R/site-library/00LOCK* || true
-RUN R -e "natmanager::install('core')" || R -e "remotes::install_github('natverse/nat')"
+RUN R -e "natmanager::install('core')" || R -e "install.packages('nat', type='source', lib='/usr/local/lib/R/site-library', dependencies=T)" || R -e "remotes::install_github('natverse/nat')"
 
 # Try to install key packages individually to avoid rate limits with better error handling
 RUN R -e "print('Installing nat.h5reg...'); if(!require('curl', quietly=TRUE)) stop('curl not available'); remotes::install_github('natverse/nat.h5reg')" || echo "nat.h5reg install failed - check curl and hdf5r dependencies"
